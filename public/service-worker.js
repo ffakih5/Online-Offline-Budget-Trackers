@@ -1,7 +1,7 @@
 const FILES_TO_CACHE = [
     "/",
     "/index.html",
-    "/assets/css/style.css",
+    "/assets/css/styles.css",
 ]
 const PRECACHE = 'precache-v1';
 const RUNTIME = 'runtime';
@@ -42,9 +42,10 @@ self.addEventListener('fetch', (event) => {
                 if (cachedResponse) {
                     return cachedResponse;
                 }
-
+                console.log("service-worker fetch");
                 return caches.open(RUNTIME).then((cache) => {
                     return fetch(event.request).then((response) => {
+                        console.log(event.request);
                         return cache.put(event.request, response.clone()).then(() => {
                             return response;
                         });
