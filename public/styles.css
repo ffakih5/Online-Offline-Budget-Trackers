@@ -1,11 +1,11 @@
 body {
   font-size: 120%;
-  font-family: Arial;
+  font-family: 'Bebas Neue', cursive;
 }
 
 button, input {
   font-size: 100%;
-  font-family: Arial;
+  font-family: 'Bebas Neue', cursive;
 }
 
 table {
@@ -34,7 +34,7 @@ tr:nth-child(even) {
 
 .total {
   font-size: 150%;
-  text-decoration: underline;
+  text-decoration: wavy;
 }
 
 .form {
@@ -49,3 +49,4 @@ tr:nth-child(even) {
   width: 90%;
   margin: 0 auto;
 }
+
