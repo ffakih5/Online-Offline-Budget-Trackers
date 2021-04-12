@@ -1,12 +1,15 @@
 const FILES_TO_CACHE = [
     "/",
     "/index.html",
-    "/assets/css/styles.css",
+    "/styles.css",
+    "/db.js",
+    "/index.js",
+    "/manifest.webmanifest",
 ]
-const PRECACHE = 'precache-v1';
-const RUNTIME = 'runtime';
+const PRECACHE = "precache-v1";
+const RUNTIME = "runtime";
 
-self.addEventListener('install', (event) => {
+self.addEventListener("install", (event) => {
     event.waitUntil(
         caches
             .open(PRECACHE)
@@ -15,8 +18,7 @@ self.addEventListener('install', (event) => {
     );
 });
 
-// The activate handler takes care of cleaning up old caches.
-self.addEventListener('activate', (event) => {
+self.addEventListener("activate", (event) => {
     const currentCaches = [PRECACHE, RUNTIME];
     event.waitUntil(
         caches
@@ -35,23 +37,35 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-self.addEventListener('fetch', (event) => {
+self.addEventListener("fetch", (event) => {
     if (event.request.url.startsWith(self.location.origin)) {
+        event.respondWith(fetch(event.request));
+        return;
+    }
+
+    if (event.request.ur.includes("/api/transaction")) {
         event.respondWith(
-            caches.match(event.request).then((cachedResponse) => {
+            caches.open(RUNTIME).then((cache) => {
+                fetch(event.request).then((response) => {
+                    //console.log(event.request);
+                    cache.put(event.request, response.clone()).then(() => {
+                        return response;
+                    })
+                        .catch(() => {
+                            caches.match(event.request)
+                        })
+                });
+            }) return;
+    }
+
+    event.respondWith(
+        caches.match(event.request)
+            .then((cachedResponse) => {
                 if (cachedResponse) {
                     return cachedResponse;
                 }
-                console.log("service-worker fetch");
-                return caches.open(RUNTIME).then((cache) => {
-                    return fetch(event.request).then((response) => {
-                        console.log(event.request);
-                        return cache.put(event.request, response.clone()).then(() => {
-                            return response;
-                        });
-                    });
-                });
-            })
-        );
-    }
+                )
+
+})
+        
 });
